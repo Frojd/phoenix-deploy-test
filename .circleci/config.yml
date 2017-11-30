@@ -4,9 +4,15 @@ jobs:
     working_directory: ~/repo
     docker:
       - image: elixir:1.5.1
+        environment:
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
+          DATABASE_NAME: postgres
+          DATABASE_TEST_NAME: postgres_test
+          DATABASE_HOST: localhost
       - image: postgres:9.4.1
         environment:
-          POSTGRES_USER: ubuntu
+          POSTGRES_USER: postgres
     steps:
       - checkout
       - run:
