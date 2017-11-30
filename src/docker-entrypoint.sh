@@ -17,7 +17,7 @@ case "$CMD" in
             mix phx.new $SCAFFOLD_APP_NAME --no-brunch
 
             echo "Move app to src"
-            mv ./$SCAFFOLD_APP_NAME/* ./
+            cp -Rp ./$SCAFFOLD_APP_NAME/. .
             rm -rf ./$SCAFFOLD_APP_NAME
 
             echo "Update configuration"
