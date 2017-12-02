@@ -23,4 +23,7 @@ jobs:
             mix deps.get
             mix ecto.create
             mix test
-
+      - run:
+          command: |
+            cd src
+            MIX_ENV=prod mix release --env=prod
