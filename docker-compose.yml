@@ -5,6 +5,7 @@ services:
         build: src
         volumes:
             - "./src:/app"
+            - "./src:/src"
         ports:
             - "4000:4000"
         depends_on:
@@ -18,3 +19,25 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
             - POSTGRES_DB=postgres
+    deploy:
+        image: frojd/phoenix-deploy-test-deploy
+        build: 
+            dockerfile: Dockerfile_deploy
+            context: .
+        depends_on:
+            - web
+            - webserver
+        volumes:
+            - "./src:/src"
+            - "./deploy:/deploy"
+    webserver:
+        image: frojd/phoenix-deploy-test-webserver
+        build:
+            dockerfile: Dockerfile_webserver
+            context: .
+        depends_on:
+            - web
+            - db
+        ports:
+            - "80:80"
+            - "8080:8080"

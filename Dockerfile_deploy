@@ -1,0 +1,18 @@
+FROM python:3.6
+
+ENV PYTHONUNBUFFERED=1
+
+COPY docker/files/deploy_rsa /root/.ssh/id_rsa
+COPY docker/files/deploy_rsa.pub /root/.ssh/id_rsa.pub
+
+WORKDIR /deploy
+ADD . /deploy/
+
+RUN apt-get update && apt-get install -y rsync vim
+RUN pip install -r deploy/requirements.txt --no-cache-dir \
+    && pip install ipython
+
+RUN ansible-galaxy install -r deploy/requirements.yml
+
+
+CMD pip install -r /deploy/requirements.txt && ansible-galaxy install -r /deploy/requirements.yml
