@@ -1,0 +1,8 @@
+- supervisorctl:
+    name: phoenix
+    state: started
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted

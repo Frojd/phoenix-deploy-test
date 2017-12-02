@@ -1,0 +1,10 @@
+- supervisorctl:
+    name: phoenix
+    state: stopped
+
+- name: run migrations
+  command: "./{{ app_name }} migrate"
+  environment:
+    MIX_ENV: "{{ mix_env }}"
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}/_build/dev/rel/{{ app_name }}/bin"

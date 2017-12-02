@@ -1,0 +1,5 @@
+---
+- name: Rollback phoenix application
+  hosts: all
+  roles:
+    - { role: carlosbuenosvinos.ansistrano-rollback }
