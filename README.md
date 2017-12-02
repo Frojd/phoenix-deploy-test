@@ -13,6 +13,19 @@
 3. Done. Visit localhost:400
 
 
-# Tests
+## Tests
 
 - `docker-compose run --rm web test`
+
+
+## Local deployment with ansistrano
+
+Building release:
+    ```
+    docker-compose exec web bash -c "MIX_ENV=prod mix release --env=prod"
+    ```
+
+Deploying to local webserver:
+    ```
+    dc run --rm deploy ansible-playbook deploy.yml -i stages/local
+    ```
