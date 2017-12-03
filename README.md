@@ -1,9 +1,10 @@
 # Phoenix with docker lab
 
-This is a demo project that includes:
-- Deployment with ansistrano in a separate docker container
-- Nginx example
+This is a example project that includes:
+- Phoenix and Elixir with Postgres
 - Configuration management with conform
+- Deployment with destillery and ansistrano (through a separate docker container)
+- Nginx example
 - Circle 2.0 build example
 - Migrations
 
@@ -11,10 +12,10 @@ This is a demo project that includes:
 
 1. Copy configuration
 
-    ```
-    cp docker/config/web.example.env docker/config/web.env
-    cp docker/config/db.example.env docker/config/db.env
-    ```
+```
+cp docker/config/web.example.env docker/config/web.env
+cp docker/config/db.example.env docker/config/db.env
+```
 
 2. Run: docker-compose up
 3. Done. Visit localhost:4000
@@ -29,12 +30,23 @@ This is a demo project that includes:
 
 Building release:
 
-    ```
-    docker-compose exec web bash -c "MIX_ENV=prod mix release --env=prod"
-    ```
+```
+docker-compose exec web bash -c "MIX_ENV=prod mix release --env=prod"
+```
 
 Deploying to local webserver:
 
-    ```
-    dc run --rm deploy ansible-playbook deploy.yml -i stages/local
-    ```
+```
+dc run --rm deploy ansible-playbook deploy.yml -i stages/local
+```
+
+
+## TODO
+
+- [ ] Extend config value list (with log destination among others)
+- [ ] Extend env list to include cookie signage
+- [ ] Look into asset bundling
+- [ ] Investigate CI builds
+- [ ] Research best approach for media handling
+
+
