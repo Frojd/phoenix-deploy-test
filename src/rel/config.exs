@@ -36,7 +36,6 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
-  #set include_erts: false
   set cookie: :"6w?wZb_<UpL*:HZrhJ/FwfUAEO[g1pEn`)(Z{m?xN~HeoY0Rs&q9En!v&RZ~y@8>"
 end
 
@@ -47,6 +46,8 @@ end
 
 release :example_app do
   set version: current_version(:example_app)
+  plugin Conform.ReleasePlugin
+
   set applications: [
     :runtime_tools
   ]

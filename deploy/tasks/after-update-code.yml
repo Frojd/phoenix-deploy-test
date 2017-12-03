@@ -2,9 +2,18 @@
     name: phoenix
     state: stopped
 
-- name: run migrations
+- name: Capture app version
+  command: "cut -d' ' -f2 {{ ansistrano_release_path.stdout }}/_build/prod/rel/{{ app_name }}/releases/start_erl.data"
+  register: rel_vsn
+
+- name: Symlink app config
+  file:
+    src: "{{ ansistrano_shared_path }}/{{ app_name }}.conf"
+    dest: "{{ ansistrano_release_path.stdout }}/_build/prod/rel/{{ app_name }}/releases/{{ rel_vsn.stdout }}/{{ app_name}}.conf"
+    state: link
+    force: yes
+
+- name: Run migrations
   command: "./{{ app_name }} migrate"
-  environment:
-    MIX_ENV: "{{ mix_env }}"
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}/_build/dev/rel/{{ app_name }}/bin"
+    chdir: "{{ ansistrano_release_path.stdout }}/_build/prod/rel/{{ app_name }}/bin"
