@@ -1,6 +1,18 @@
 version: 2
 jobs:
-  build:
+  checkout_code:
+    - image: circleci/python:3.6
+    - image: postgres:9.4.1
+        environment:
+          POSTGRES_USER: postgres
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
+  phoenix:
     working_directory: ~/repo
     docker:
       - image: elixir:1.5.1
@@ -27,3 +39,61 @@ jobs:
           command: |
             cd src
             MIX_ENV=prod mix release --env=prod
+      - save_cache:
+          key: v1-phoenix-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo/src
+  deploy:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          keys:
+              - v1-repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          keys:
+              - v1-phoenix-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          keys:
+              - v1-deploy-{{ checksum "deploy/requirements.txt" }}
+      - run:
+          command: |
+            cd deploy
+            python3 -m venv venv
+            sudo apt-get -y -qq install rsync
+            . venv/bin/activate
+            pip install -r requirements.txt
+            ansible-galaxy install -r requirements.yml
+
+      - save_cache:
+          key: v1-deploy-{{ checksum "deploy/requirements.txt" }}
+          paths:
+            - deploy/venv
+
+      - run:
+          command: |
+            cd deploy
+            . venv/bin/activate
+
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              #ansible-playbook deploy.yml -i stages/state
+            fi
+
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              #ansible-playbook deploy.yml -i stages/prod
+            fi
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_code
+      - phoenix:
+          requires:
+            - checkout_code
+      - deploy:
+          requires:
+            - phoenix
