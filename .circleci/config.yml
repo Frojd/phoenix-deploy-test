@@ -75,10 +75,12 @@ jobs:
             . venv/bin/activate
 
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              echo "Deploy stages/stage"
               #ansible-playbook deploy.yml -i stages/state
             fi
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "Deploy stages/prod"
               #ansible-playbook deploy.yml -i stages/prod
             fi
 
