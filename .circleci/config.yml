@@ -1,10 +1,9 @@
 version: 2
 jobs:
   checkout_code:
-    - image: circleci/python:3.6
+    - image: elixir:1.5.1
     - image: postgres:9.4.1
-        environment:
-          POSTGRES_USER: postgres
+    - image: circleci/python:3.6
     working_directory: ~/repo
     steps:
       - checkout
