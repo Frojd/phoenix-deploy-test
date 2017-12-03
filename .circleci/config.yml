@@ -9,13 +9,13 @@ jobs:
     steps:
       - checkout
       - save_cache:
-          key: v1-repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo
   phoenix:
     working_directory: ~/repo
     docker:
-      - image: elixir:1.5.1
+      - image: circleci/elixir:1.5.1
         environment:
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
@@ -40,7 +40,7 @@ jobs:
             cd src
             MIX_ENV=prod mix release --env=prod
       - save_cache:
-          key: v1-phoenix-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          key: v2-phoenix-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo/src
   deploy:
@@ -50,13 +50,13 @@ jobs:
     steps:
       - restore_cache:
           keys:
-              - v1-repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+              - v2-repo-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-              - v1-phoenix-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+              - v2-phoenix-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           keys:
-              - v1-deploy-{{ checksum "deploy/requirements.txt" }}
+              - v2-deploy-{{ checksum "deploy/requirements.txt" }}
       - run:
           command: |
             cd deploy
@@ -66,7 +66,7 @@ jobs:
             pip install -r requirements.txt
             ansible-galaxy install -r requirements.yml
       - save_cache:
-          key: v1-deploy-{{ checksum "deploy/requirements.txt" }}
+          key: v2-deploy-{{ checksum "deploy/requirements.txt" }}
           paths:
             - deploy/venv
       - run:
