@@ -3,13 +3,9 @@ FROM ubuntu:16.04
 MAINTAINER Frojd
 LABEL version="v1.0.0"
 
-RUN apt-get update && apt-get -y install supervisor nginx wget vim ssh openssh-server
-RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
-RUN dpkg -i erlang-solutions_1.0_all.deb
-
-RUN apt-get update && apt-get -y install esl-erlang elixir rsync curl net-tools
-RUN apt-get clean && apt-get update && apt-get install -y locales
-RUN mix local.hex
+RUN apt-get update \
+    && apt-get -y install supervisor nginx ssh openssh-server \
+    && apt-get -y install rsync wget vim curl net-tools locales
 
 COPY docker/files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/files/nginx.conf /etc/nginx/sites-enabled/default
