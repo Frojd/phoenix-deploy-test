@@ -65,8 +65,6 @@ config :phoenix_environment_settings, ExampleAppWeb.Endpoint,
 #
 #     config :example_app, ExampleAppWeb.Endpoint, server: true
 #
-#
-config :phoenix, :serve_endpoints, true
 
 # Configure your database
 config :example_app, ExampleApp.Repo,
